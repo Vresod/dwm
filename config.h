@@ -63,7 +63,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] =   { "rofi", "-show", "drun", "-show-icons" };
 static const char *termcmd[]  =   { "st", NULL };
 static const char *xkillcmd[] =   { "xkill", NULL };
-static const char *maimcmd[]  =   { "/home/lukeb/Repos/sh-scripts/scrot.sh", "select", "clip" };
+static const char *maimcmd[]  =   { "scrshot", "select", "clip" };
 static const char *volup[]    =   { "volcontrol","up","5"};
 static const char *voldown[]  =   { "volcontrol","down","5" };
 static const char *volmute[]  =   { "volcontrol","mute"};
@@ -72,7 +72,13 @@ static const char *brightdown[] = { "bklcontrol", "down", "5" };
 static const char *micon[]    =   { "mictest", "on" };
 static const char *micoff[]   =   { "mictest", "off" };
 static const char *killactivewindow[] = { "killactivewindow", NULL };
-static const char *killcmd[]   =   { "pkill", "-9", "X" };
+static const char *killcmd[]   =  { "killxorgconf" };
+static const char *dmenuunicode[]   =   { "dmenuunicode", NULL };
+static const char *eject[]    =   { "eject", NULL };
+static const char *scrot[]    =   { "/home/lukeb/Repos/sh-scripts/scrot.sh", NULL };
+static const char *mpdctrl[]  =   { "/home/lukeb/Repos/rofi-mpd/control.sh", NULL };
+static const char *shutupjoey[]  =   { "st", "nvim", "/home/lukeb/tmp/shutupjoey" };
+static const char *maimfeh[]  =   { "scrshot", "select", "feh" };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -100,8 +106,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY,                       XK_x,      spawn,          {.v = xkillcmd } },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = maimcmd } },
+	{ MODKEY|ControlMask,           XK_s,      spawn,          {.v = maimfeh } },
+	{ MODKEY|ControlMask,           XK_s,      spawn,          {.v = scrot } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = killactivewindow} },
+	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = killactivewindow } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = mpdctrl } },
+	{ MODKEY,                       XK_grave,  spawn,          {.v = dmenuunicode } },
+	{ MODKEY|ShiftMask,             XK_grave,  spawn,          {.v = shutupjoey } },
 	{ MODKEY,          XF86XK_AudioRaiseVolume,spawn,          {.v =  micon } },
 	{ MODKEY,          XF86XK_AudioLowerVolume,spawn,          {.v =  micoff } },
 	{ 0,               XF86XK_AudioRaiseVolume,spawn,          {.v =  volup } },
@@ -109,6 +120,7 @@ static Key keys[] = {
 	{ 0,                     XF86XK_AudioMute, spawn,          {.v =  volmute } },
 	{ 0,              XF86XK_MonBrightnessDown,spawn,          {.v =  brightdown } },
 	{ 0,                XF86XK_MonBrightnessUp,spawn,          {.v =  brightup } },
+	{ 0,                        XF86XK_Display,spawn,          {.v =  eject } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -133,9 +145,28 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,        MODKEY|ShiftMask,Button2,        killclient,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+};
+
+static const char *ipcsockpath = "/tmp/dwm.sock";
+static IPCCommand ipccommands[] = {
+  IPCCOMMAND(  view,                1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  toggleview,          1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  tag,                 1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  toggletag,           1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  tagmon,              1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  focusmon,            1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  focusstack,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  zoom,                1,      {ARG_TYPE_NONE}   ),
+  IPCCOMMAND(  incnmaster,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  killclient,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  togglefloating,      1,      {ARG_TYPE_NONE}   ),
+  IPCCOMMAND(  setmfact,            1,      {ARG_TYPE_FLOAT}  ),
+  IPCCOMMAND(  setlayoutsafe,       1,      {ARG_TYPE_PTR}    ),
+  IPCCOMMAND(  quit,                1,      {ARG_TYPE_NONE}   )
 };
 
