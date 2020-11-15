@@ -8,12 +8,11 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
-static const unsigned int baralpha = 0x00;
+static const char col_gray1[]       = "#1f1923"; // unactive background color; default is #222222
+static const char col_gray2[]       = "#000000"; // nothing; default is #444444
+static const char col_gray3[]       = "#bbbbbb"; // unactive font color; default is #bbbbbb
+static const char col_gray4[]       = "#eeeeee"; // active font color; default is #eeeeee
+static const char col_cyan[]        = "#b73109"; // background color of active; default is #005577
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -29,8 +28,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+  //{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+  //{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "feh",      NULL,       NULL,       0,            1,           -1 },
 	{ "xarchiver",NULL,       NULL,       0,            1,           -1 },
 };
